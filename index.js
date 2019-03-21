@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const express = require('express');
 const app = express();
 
@@ -35,6 +36,19 @@ app.get('/api/posts/:year/:month', (req, res) => {
 });
 
 app.post('/api/courses', (req, res) => {
+    // Handle validate input
+    const rules = {
+        name: Joi.string().min(3).required()
+    };
+
+    const validator = Joi.validate(req.body, rules);
+
+    if (validator.error) {
+        res.status(400).send({
+            error: validator.error.details[0].message
+        });
+    }
+
     const course = {
         id: courses.length + 1,
         name: req.body.name
