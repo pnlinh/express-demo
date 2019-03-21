@@ -25,7 +25,7 @@ app.get('/api/courses/:id', (req, res) => {
     const course = courses.find(c => c.id === parseInt(req.params.id));
 
     if (!course) {
-        res.status(404).send({
+        return res.status(404).send({
             error: 'The course with given ID was not found'
         });
     }
@@ -42,7 +42,7 @@ app.post('/api/courses', (req, res) => {
     const {error} = validateCourse(req.body); // What is error ? Must be dump result validator
 
     if (error) {
-        res.status(400).send({
+        return res.status(400).send({
             error: error.details[0].message
         });
     }
@@ -62,7 +62,7 @@ app.put('/api/courses/:id', (req, res) => {
     const course = courses.find(c => c.id === parseInt(req.params.id));
 
     if (!course) {
-        res.status(404).send({
+        return res.status(404).send({
             error: 'The course with given ID was not found'
         });
     }
@@ -70,7 +70,7 @@ app.put('/api/courses/:id', (req, res) => {
     const {error} = validateCourse(req.body);
 
     if (error) {
-        res.status(400).send({
+        return res.status(400).send({
             error: error.details[0].message
         });
     }
@@ -78,6 +78,21 @@ app.put('/api/courses/:id', (req, res) => {
     // Update course
     course.name = req.body.name;
     // Return course
+    res.send(course);
+});
+
+app.delete('/api/courses/:id', (req, res) => {
+    const course = courses.find(c => c.id === parseInt(req.params.id));
+
+    if (!course) {
+        return res.status(404).send({
+            error: 'The course with given ID was not found'
+        });
+    }
+
+    const index = courses.indexOf(course);
+    courses.splice(index, 1);
+
     res.send(course);
 });
 
